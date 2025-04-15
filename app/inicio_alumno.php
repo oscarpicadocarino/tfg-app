@@ -7,6 +7,37 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] !== 'alumno') {
     header("Location: login.php");
     exit();
 }
+
+// Conectar a la base de datos
+$host = 'db';
+$usuario = 'usuario';
+$contrasena = 'password';
+$nombre_bd = 'tfg_app_db';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$nombre_bd", $usuario, $contrasena);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $id_alumno = $_SESSION['user_id'];
+
+    // Consulta para obtener las clases del alumno con el nombre y descripción de la asignatura
+    $stmt = $pdo->prepare("
+        SELECT 
+            c.id_clase, 
+            a.nombre AS nombre_asignatura, 
+            a.descripcion
+        FROM clases c
+        JOIN alumnos_clases ca ON c.id_clase = ca.id_clase
+        JOIN asignaturas a ON c.id_asignatura = a.id_asignatura
+        WHERE ca.id_alumno = ?
+    ");
+    $stmt->execute([$id_alumno]);
+    $clases = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
+    echo "Error de conexión: " . $e->getMessage();
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -76,39 +107,27 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] !== 'alumno') {
         <h2 class="mb-4">Asignaturas Disponibles</h2>
         <div class="container-fluid">
             <div class="row g-4">
-                <div class="col-md-6">
-                    <a href="pdoo.php" class="text-decoration-none text-dark">
-                        <div class="card p-4 shadow-sm border-0">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-code-square me-3" style="font-size: 2.5rem;"></i>
-                                <h4 class="fw-bold mb-0">Programación y Diseño Orientado a Objetos</h4>
-                            </div>
-                            <p class="mt-3">Descripción sobre la asignatura.</p>
+                <?php if (count($clases) > 0): ?>
+                    <?php foreach ($clases as $clase): ?>
+                        <div class="col-md-6">
+                            <a href="ver_clase.php?id=<?= $clase['id_clase'] ?>" class="text-decoration-none text-dark">
+                                <div class="card p-4 shadow-sm border-0">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-journal-bookmark me-3" style="font-size: 2.5rem;"></i>
+                                        <h4 class="fw-bold mb-0"><?= htmlspecialchars($clase['nombre_asignatura']) ?></h4>
+                                    </div>
+                                    <p class="mt-3"><?= htmlspecialchars($clase['descripcion']) ?></p>
+                                </div>
+                            </a>
                         </div>
-                    </a>
-                </div>
-                <div class="col-md-6">
-                    <a href="scd.php" class="text-decoration-none text-dark">
-                        <div class="card p-4 shadow-sm border-0">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-diagram-3 me-3" style="font-size: 2.5rem;"></i>
-                                <h4 class="fw-bold mb-0">Sistemas Concurrentes y Distribuidos</h4>
-                            </div>
-                            <p class="mt-3">Descripción sobre la asignatura.</p>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="col-12">
+                        <div class="alert alert-warning" role="alert">
+                            No estás matriculado en ninguna clase todavía.
                         </div>
-                    </a>
-                </div>
-                <div class="col-md-6">
-                    <a href="fis.php" class="text-decoration-none text-dark">
-                        <div class="card p-4 shadow-sm border-0">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-braces me-3" style="font-size: 2.5rem;"></i>
-                                <h4 class="fw-bold mb-0">Fundamentos de Ingeniería del Software</h4>
-                            </div>
-                            <p class="mt-3">Descripción sobre la asignatura.</p>
-                        </div>
-                    </a>
-                </div>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

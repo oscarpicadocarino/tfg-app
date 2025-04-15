@@ -29,8 +29,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($user['contraseña'] == $contraseña) {
             $_SESSION['user_id'] = $user['id_usuario'];
             $_SESSION['tipo_usuario'] = $user['tipo_usuario'];
-            header("Location: dashboard.php");
-            exit();
+            switch ($user['tipo_usuario']) {
+              case 'admin':
+                  header("Location: inicio_admin.php");
+                  break;
+              case 'profesor':
+                  header("Location: inicio_profesor.php");
+                  break;
+              case 'alumno':
+                  header("Location: inicio_alumno.php");
+                  break;
+              default:
+                  // // Puedes redirigir a una página de error o cerrar sesión
+                  // header("Location: error.php");
+                  break;
+          }
+          exit();
         } else {
             $error = "Contraseña incorrecta";
         }

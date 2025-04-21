@@ -91,7 +91,7 @@ require 'conexion.php';
                 <a href="inicio_admin.php" class="nav-link"><i class="bi bi-house-door"></i> Inicio</a>
             </li>
             <li class="nav-item">
-                <a href="crear_clase.php" class="nav-link"><i class="bi bi-plus-circle"></i> Crear Clase</a>
+                <a href="ver_clase.php" class="nav-link"><i class="bi bi-plus-circle"></i> Crear Clase</a>
             </li>
             <li class="nav-item">
                 <a href="asignar_alumnos.php" class="nav-link"><i class="bi bi-person-check"></i> Asignar Alumnos</a>
@@ -121,7 +121,7 @@ require 'conexion.php';
                 <div class="feature-box bg-primary text-white">
                     <i class="bi bi-plus-circle"></i>
                     <h3>Crear Nueva Clase</h3>
-                    <a href="crear_clase.php" class="stretched-link"></a>
+                    <a href="ver_clases.php" class="stretched-link"></a>
                 </div>
             </div>
             <div class="col-md-6">

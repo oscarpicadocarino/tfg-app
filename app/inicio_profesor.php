@@ -109,7 +109,7 @@ try {
                 <?php if (count($asignaturas_clases) > 0): ?>
                     <?php foreach ($asignaturas_clases as $asignatura_clase): ?>
                         <div class="col-md-6">
-                            <a href="ver_asignatura.php?id=<?= $asignatura_clase['id_asignatura'] ?>" class="text-decoration-none text-dark">
+                            <a href="asignatura_profesor.php?id=<?= $asignatura_clase['id_asignatura'] ?>" class="text-decoration-none text-dark">
                                 <div class="card p-4 shadow-sm border-0">
                                     <div class="d-flex align-items-center">
                                         <i class="bi bi-journal-bookmark me-3" style="font-size: 2.5rem;"></i>

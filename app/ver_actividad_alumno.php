@@ -36,13 +36,7 @@ if (!$actividad) {
     <div class="mb-3">
         <strong>Contenido:</strong> <p><?= nl2br(htmlspecialchars($actividad['contenido'])) ?></p>
     </div>
-    <div class="mb-3">
-        <strong>Estado:</strong>
-        <span class="badge bg-<?= $actividad['estado'] === 'publicada' ? 'success' : 'secondary' ?>">
-            <?= ucfirst($actividad['estado']) ?>
-        </span>
-    </div>
-    <a href="actividades.php?id_clase=<?= $actividad['id_clase'] ?>" class="btn btn-primary">Volver</a>
+    <a href="asignatura_alumno.php?id=<?= $actividad['id_clase'] ?>" class="btn btn-primary">Volver</a>
 </div>
 
 </body>

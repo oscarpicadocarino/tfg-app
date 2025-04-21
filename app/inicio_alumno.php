@@ -106,7 +106,7 @@ try {
                 <?php if (count($clases) > 0): ?>
                     <?php foreach ($clases as $clase): ?>
                         <div class="col-md-6">
-                            <a href="ver_clase.php?id=<?= $clase['id_clase'] ?>" class="text-decoration-none text-dark">
+                            <a href="asignatura_alumno.php?id=<?= $clase['id_clase'] ?>" class="text-decoration-none text-dark">
                                 <div class="card p-4 shadow-sm border-0">
                                     <div class="d-flex align-items-center">
                                         <i class="bi bi-journal-bookmark me-3" style="font-size: 2.5rem;"></i>

@@ -2,15 +2,15 @@
 // actividades.php
 require 'conexion.php';
 
-$id_asignatura = $_GET['id_asignatura'] ?? null;
+$id_clase = $_GET['id_clase'] ?? null;
 
-if (!$id_asignatura) {
-    die("ID de asignatura no especificado.");
+if (!$id_clase) {
+    die("ID de clase no especificado.");
 }
 
-// Obtener actividades
-$stmt = $pdo->prepare("SELECT * FROM actividad WHERE id_asignatura = ?");
-$stmt->execute([$id_asignatura]);
+// Obtener actividades para la clase
+$stmt = $pdo->prepare("SELECT * FROM actividad WHERE id_clase = ?");
+$stmt->execute([$id_clase]);
 $actividades = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -19,7 +19,7 @@ $actividades = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Actividades de la Asignatura</title>
+    <title>Actividades de la Clase</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -78,12 +78,19 @@ $actividades = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .btn-sm {
             font-size: 14px;
         }
+
+        .btn-back {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container mt-4">
-    <h3>Actividades de la asignatura</h3>
+    <!-- Botón Volver -->
+    <a href="asignatura_profesor.php?id=<?= $id_clase ?>" class="btn btn-secondary btn-back">Volver</a>
+    
+    <h3>Actividades de la Clase</h3>
     <table class="table table-bordered table-hover">
         <thead>
             <tr>

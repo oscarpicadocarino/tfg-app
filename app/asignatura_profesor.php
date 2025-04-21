@@ -101,7 +101,7 @@ $nombre_asignatura = "Programación Orientada a Objetos"; // Ejemplo estático p
                     <div class="card-body">
                         <h5 class="card-title">Actividades</h5>
                         <p class="card-text">Consulta y gestiona todas las actividades asociadas a esta asignatura.</p>
-                        <a href="actividades.php?id_asignatura=<?= $id_asignatura ?>" class="stretched-link"></a>
+                        <a href="actividades.php?id_clase=<?= $id_asignatura ?>" class="stretched-link"></a>
                     </div>
                 </div>
             </div>

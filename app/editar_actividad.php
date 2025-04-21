@@ -27,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $pdo->prepare("UPDATE actividad SET titulo = ?, contenido = ?, estado = ? WHERE id = ?");
     $stmt->execute([$titulo, $contenido, $estado, $id]);
 
-    // Redirigir a la página de actividades de la asignatura
-    header("Location: actividades.php?id_asignatura=" . $actividad['id_asignatura']);
+    // Redirigir a la página de actividades de la clase
+    header("Location: actividades.php?id_clase=" . $actividad['id_clase']);
     exit; // Asegúrate de usar exit para evitar que el código continúe ejecutándose después de la redirección
 }
 ?>
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </select>
         </div>
         <button type="submit" class="btn btn-primary">Actualizar</button>
-        <a href="actividades.php?id_asignatura=<?= $actividad['id_asignatura'] ?>" class="btn btn-secondary">Cancelar</a>
+        <a href="actividades.php?id_clase=<?= $actividad['id_clase'] ?>" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
 

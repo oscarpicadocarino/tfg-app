@@ -163,12 +163,15 @@ try {
                     <?php endforeach; ?>
                 </tbody>
             </table>
+            <a href="asignatura_profesor.php?id=<?= $id_asignatura ?>" class="btn btn-secondary btn-back">Volver</a>
+
         <?php else: ?>
             <div class="alert alert-info">No hay errores comunes registrados para esta asignatura.</div>
         <?php endif; ?>
+
     </div>
     <!-- Botón para añadir nuevo error (flotante en la esquina inferior derecha) -->
-<a href="anadir_error.php?id_asignatura=<?= $id_asignatura ?>" class="btn btn-primary btn-lg rounded-circle position-fixed" style="bottom: 20px; right: 20px; z-index: 1000;">
+    <a href="anadir_error.php?id_asignatura=<?= $id_asignatura ?>" class="btn btn-primary btn-lg rounded-circle position-fixed" style="bottom: 20px; right: 20px; z-index: 1000;">
     <i class="bi bi-plus"></i>
 </a>
 

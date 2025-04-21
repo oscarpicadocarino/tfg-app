@@ -6,6 +6,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] !== 'admin') {
     header("Location: login.php");
     exit();
 }
+
+require 'conexion.php';
+
 ?>
 
 <!DOCTYPE html>

@@ -8,11 +8,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] !== 'profesor') {
     exit();
 }
 
-// Conectar a la base de datos
-$host = 'db';
-$usuario = 'usuario';
-$contrasena = 'password';
-$nombre_bd = 'tfg_app_db';
+require 'conexion.php';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$nombre_bd", $usuario, $contrasena);

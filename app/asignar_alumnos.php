@@ -6,19 +6,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] !== 'admin') {
     exit();
 }
 
-// Conexión
-$host = 'db';
-$usuario = 'usuario'; 
-$contrasena = 'password';
-$nombre_bd = 'tfg_app_db';
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$nombre_bd", $usuario, $contrasena);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    echo "Error de conexión: " . $e->getMessage();
-    exit();
-}
+require 'conexion.php';
 
 // Procesar el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

@@ -1,50 +1,38 @@
 <?php
-// login.php
 session_start();
-
-// Archivo de conexión separado (mejor no incluir directamente index.php con HTML)
-$host = 'db';
-$usuario = 'usuario';
-$contrasena = 'password';
-$nombre_bd = 'tfg_app_db';
-
-$mysqli = new mysqli($host, $usuario, $contrasena, $nombre_bd);
-if ($mysqli->connect_error) {
-    die("Conexión fallida: " . $mysqli->connect_error);
-}
+require 'conexion.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $correo = $_POST['correo'];
     $contraseña = $_POST['contraseña'];
 
     $query = "SELECT * FROM usuarios WHERE correo = ?";
-    $stmt = $mysqli->prepare($query);
-    $stmt->bind_param("s", $correo);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-        
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$correo]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        // Verificamos la contraseña (sin hash, tal como la estás guardando)
         if ($user['contraseña'] == $contraseña) {
             $_SESSION['user_id'] = $user['id_usuario'];
             $_SESSION['tipo_usuario'] = $user['tipo_usuario'];
+
+            // Redirigir según el tipo de usuario
             switch ($user['tipo_usuario']) {
-              case 'admin':
-                  header("Location: inicio_admin.php");
-                  break;
-              case 'profesor':
-                  header("Location: inicio_profesor.php");
-                  break;
-              case 'alumno':
-                  header("Location: inicio_alumno.php");
-                  break;
-              default:
-                  // // Puedes redirigir a una página de error o cerrar sesión
-                  // header("Location: error.php");
-                  break;
-          }
-          exit();
+                case 'admin':
+                    header("Location: inicio_admin.php");
+                    break;
+                case 'profesor':
+                    header("Location: inicio_profesor.php");
+                    break;
+                case 'alumno':
+                    header("Location: inicio_alumno.php");
+                    break;
+                default:
+                    header("Location: error.php");
+                    break;
+            }
+            exit();
         } else {
             $error = "Contraseña incorrecta";
         }

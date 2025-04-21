@@ -100,30 +100,12 @@ $nombre_asignatura = "Programación Orientada a Objetos"; // Ejemplo estático p
                 <div class="card h-100 shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title">Actividades</h5>
-                        <table class="table table-sm table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody style="max-height: 180px; overflow-y: auto;">
-                                <tr>
-                                    <td>Actividad 1</td>
-                                    <td><span class="badge bg-secondary">Borrador</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-info">Ver</button>
-                                        <button class="btn btn-sm btn-primary">Editar</button>
-                                        <button class="btn btn-sm btn-success">Publicar</button>
-                                    </td>
-                                </tr>
-                                <!-- Más actividades aquí -->
-                            </tbody>
-                        </table>
+                        <p class="card-text">Consulta y gestiona todas las actividades asociadas a esta asignatura.</p>
+                        <a href="actividades.php?id_asignatura=<?= $id_asignatura ?>" class="stretched-link"></a>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </body>

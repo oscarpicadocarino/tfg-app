@@ -106,20 +106,29 @@ require 'conexion.php';
         <h1 class="mb-4">Panel de Administración</h1>
 
         <div class="container">
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="feature-box bg-primary text-white">
-                        <i class="bi bi-plus-circle"></i>
-                        <h3>Crear Nueva Clase</h3>
-                        <a href="crear_clase.php" class="stretched-link"></a>
-                    </div>
+        <div class="row g-4 mb-4">
+            <div class="col-md-12">
+                <div class="feature-box bg-success text-white">
+                    <i class="bi bi-person-plus"></i>Añadir
+                    <h3>Gestion Usuarios</h3>
+                    <a href="gestion_usuario.php" class="stretched-link"></a>
                 </div>
-                <div class="col-md-6">
-                    <div class="feature-box bg-secondary text-white">
-                        <i class="bi bi-person-check"></i>
-                        <h3>Asignar Alumnos a Clases</h3>
-                        <a href="asignar_alumnos.php" class="stretched-link"></a>
-                    </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="feature-box bg-primary text-white">
+                    <i class="bi bi-plus-circle"></i>
+                    <h3>Crear Nueva Clase</h3>
+                    <a href="crear_clase.php" class="stretched-link"></a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="feature-box bg-secondary text-white">
+                    <i class="bi bi-person-check"></i>
+                    <h3>Asignar Alumnos a Clases</h3>
+                    <a href="asignar_alumnos.php" class="stretched-link"></a>
                 </div>
             </div>
         </div>

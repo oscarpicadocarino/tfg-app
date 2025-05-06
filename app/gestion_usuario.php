@@ -148,7 +148,7 @@ try {
     </table>
     <a href="anadir_usuario.php" class="btn btn-success">
     Añadir usuario <i class="bi bi-person-plus"></i>
-    </a>
+</a>
 </div>
 
 </body>

@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar_clase'])) {
     $stmt->bindParam(':id_clase', $id_clase);
     $stmt->execute();
     
-    header("Location: crear_clase.php");
+    header("Location: ver_clases.php");
     exit();
 }
 

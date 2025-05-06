@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($user['contraseña'] == $contraseña) {
             $_SESSION['user_id'] = $user['id_usuario'];
             $_SESSION['tipo_usuario'] = $user['tipo_usuario'];
+            $_SESSION['nombre'] = $user['nombre'];
 
             // Redirigir según el tipo de usuario
             switch ($user['tipo_usuario']) {

@@ -157,6 +157,7 @@ try {
                     <td>
                         <a href="editar_clase.php?id_clase=<?= $clase['id_clase'] ?>" class="btn btn-warning btn-sm">Editar</a>
                         <a href="eliminar_clase.php?id_clase=<?= $clase['id_clase'] ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                        <a href="detalle_clase.php?id_clase=<?= $clase['id_clase'] ?>" class="btn btn-sm btn-info">Ver</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

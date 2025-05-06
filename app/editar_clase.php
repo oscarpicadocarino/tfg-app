@@ -60,8 +60,63 @@ if (isset($_GET['id_clase'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Clase - App TFG</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f5f5;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            padding-top: 40px;
+            border-right: 1px solid #ddd;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 40px;
+        }
+        .nav-link {
+            color: #333 !important;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+        .nav-link:hover {
+            background-color: #e0e0e0;
+            border-radius: 5px;
+        }
+        .nav-link i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        </style>
 </head>
 <body>
+<div class="sidebar">
+    <h3 class="mb-5 text-center fw-bold pb-2 border-bottom border-dark">Menú</h3>
+    <ul class="nav flex-column">
+            <li class="nav-item">
+                <a href="inicio_admin.php" class="nav-link"><i class="bi bi-house-door"></i> Inicio</a>
+            </li>
+            <li class="nav-item">
+                <a href="gestion_usuario.php" class="nav-link"><i class="bi bi-person-plus"></i> Gestionar Usuarios</a>
+            </li>
+            <li class="nav-item">
+                <a href="ver_clases.php" class="nav-link"><i class="bi bi-plus-circle"></i> Gestionar Clases</a>
+            </li>
+            <li class="nav-item">
+                <a href="asignar_alumnos.php" class="nav-link"><i class="bi bi-person-check"></i> Asignar Alumnos</a>
+            </li>
+            <li class="nav-item">
+                <a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a>
+            </li>
+        </ul>
+</div>
     <div class="container mt-5">
         <h2>Editar Clase</h2>
 
@@ -90,7 +145,7 @@ if (isset($_GET['id_clase'])) {
                 </select>
             </div>
 
-            <button type="submit" name="editar_clase" class="btn btn-success">Actualizar Clase</button>
+            <button type="submit" name="editar_clase" class="btn btn-primary">Actualizar</button>
         </form>
     </div>
 </body>

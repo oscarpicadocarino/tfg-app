@@ -87,7 +87,7 @@ try {
                 <a href="gestion_usuario.php" class="nav-link"><i class="bi bi-person-plus"></i> Gestionar Usuarios</a>
             </li>
             <li class="nav-item">
-                <a href="ver_clase.php" class="nav-link"><i class="bi bi-plus-circle"></i> Crear Clase</a>
+                <a href="ver_clases.php" class="nav-link"><i class="bi bi-plus-circle"></i> Gestionar Clases</a>
             </li>
             <li class="nav-item">
                 <a href="asignar_alumnos.php" class="nav-link"><i class="bi bi-person-check"></i> Asignar Alumnos</a>

@@ -39,7 +39,7 @@ try {
         $stmt = $pdo->prepare("SELECT c.*, a.nombre AS asignatura, p.nombre AS profesor 
                                FROM clases c 
                                JOIN asignaturas a ON c.id_asignatura = a.id_asignatura 
-                               JOIN usuarios p ON c.id_profesor = p.id_usuario
+                               LEFT JOIN usuarios p ON c.id_profesor = p.id_usuario
                                WHERE c.id_asignatura = :id_asignatura");
         $stmt->bindParam(':id_asignatura', $id_asignatura_filtro);
         $stmt->execute();
@@ -47,7 +47,7 @@ try {
         $stmt = $pdo->query("SELECT c.*, a.nombre AS asignatura, p.nombre AS profesor 
                              FROM clases c 
                              JOIN asignaturas a ON c.id_asignatura = a.id_asignatura 
-                             JOIN usuarios p ON c.id_profesor = p.id_usuario");
+                             LEFT JOIN usuarios p ON c.id_profesor = p.id_usuario");
     }
     $clases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -153,7 +153,7 @@ try {
                 <tr>
                     <td><?= htmlspecialchars($clase['nombre']) ?></td>
                     <td><?= htmlspecialchars($clase['asignatura']) ?></td>
-                    <td><?= htmlspecialchars($clase['profesor']) ?></td>
+                    <td><?= $clase['profesor'] ? htmlspecialchars($clase['profesor']) : 'No asignado' ?></td>
                     <td>
                         <a href="editar_clase.php?id_clase=<?= $clase['id_clase'] ?>" class="btn btn-warning btn-sm">Editar</a>
                         <a href="eliminar_clase.php?id_clase=<?= $clase['id_clase'] ?>" class="btn btn-danger btn-sm">Eliminar</a>

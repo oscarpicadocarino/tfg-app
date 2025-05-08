@@ -94,10 +94,10 @@ require 'conexion.php';
                 <a href="inicio_admin.php" class="nav-link"><i class="bi bi-house-door"></i> Inicio</a>
             </li>
             <li class="nav-item">
-                <a href="gestion_usuario.php" class="nav-link"><i class="bi bi-person-plus"></i> Gestionar Usuarios</a>
+                <a href="gestion_usuario.php" class="nav-link"><i class="bi bi-person"></i> Gestionar Usuarios</a>
             </li>
             <li class="nav-item">
-                <a href="ver_clases.php" class="nav-link"><i class="bi bi-plus-circle"></i> Gestionar Clases</a>
+                <a href="ver_clases.php" class="nav-link"><i class="bi bi-people"></i> Gestionar Clases</a>
             </li>
             <li class="nav-item">
                 <a href="asignar_alumnos.php" class="nav-link"><i class="bi bi-person-check"></i> Asignar Alumnos</a>
@@ -117,7 +117,7 @@ require 'conexion.php';
         <div class="row g-4 mb-4">
             <div class="col-md-100">
                 <div class="feature-box">
-                    <i class="bi bi-person-plus"></i>
+                    <i class="bi bi-person"></i>
                     <h3>Gestionar Usuarios</h3>
                     <a href="gestion_usuario.php" class="stretched-link"></a>
                 </div>
@@ -127,8 +127,8 @@ require 'conexion.php';
         <div class="row g-4">
             <div class="col-md-100">
                 <div class="feature-box">
-                    <i class="bi bi-plus-circle"></i>
-                    <h3>Crear Clase</h3>
+                    <i class="bi bi-people"></i>
+                    <h3>Gestionar Clases</h3>
                     <a href="ver_clases.php" class="stretched-link"></a>
                 </div>
             </div>

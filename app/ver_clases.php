@@ -107,13 +107,23 @@ try {
 <div class="sidebar">
     <h3 class="mb-5 text-center fw-bold pb-2 border-bottom border-dark">Menú</h3>
     <ul class="nav flex-column">
-        <li class="nav-item"><a href="inicio_admin.php" class="nav-link"><i class="bi bi-house-door"></i> Inicio</a></li>
-        <li class="nav-item"><a href="gestion_usuario.php" class="nav-link"><i class="bi bi-person-plus"></i> Gestionar Usuarios</a></li>
-        <li class="nav-item"><a href="ver_clases.php" class="nav-link"><i class="bi bi-plus-circle"></i> Gestionar Clases</a></li>
-        <li class="nav-item"><a href="asignar_alumnos.php" class="nav-link"><i class="bi bi-person-check"></i> Asignar Alumnos</a></li>
-        <li class="nav-item"><a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
-    </ul>
-</div>
+            <li class="nav-item">
+                <a href="inicio_admin.php" class="nav-link"><i class="bi bi-house-door"></i> Inicio</a>
+            </li>
+            <li class="nav-item">
+                <a href="gestion_usuario.php" class="nav-link"><i class="bi bi-person"></i> Gestionar Usuarios</a>
+            </li>
+            <li class="nav-item">
+                <a href="ver_clases.php" class="nav-link"><i class="bi bi-people"></i> Gestionar Clases</a>
+            </li>
+            <li class="nav-item">
+                <a href="asignar_alumnos.php" class="nav-link"><i class="bi bi-person-check"></i> Asignar Alumnos</a>
+            </li>
+            <li class="nav-item">
+                <a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a>
+            </li>
+        </ul>
+    </div>
 
 <div class="container mt-5">
     <h1 class="mb-4">Gestión de Clases</h1>

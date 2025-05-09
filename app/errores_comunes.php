@@ -116,8 +116,8 @@ $errores = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($error['descripcion']) ?></td>
                 <td>
                     <a href="editar_error.php?id=<?= $error['id_error'] ?>&id_asignatura=<?= $id_asignatura ?>&id_clase=<?= $id_clase ?>" class="btn btn-sm btn-warning">Editar</a>
-                    <a href="?id_asignatura=<?= $id_asignatura ?>&eliminar=<?= $error['id_error'] ?>&id_clase=<?= $id_clase ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este error?');">Eliminar</a>
-                </td>
+                    <a href="eliminar_error.php?eliminar=<?= $error['id_error'] ?>&id_asignatura=<?= $id_asignatura ?>&id_clase=<?= $id_clase ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este error?');">Eliminar</a>
+                    </td>
             </tr>
         <?php endforeach; ?>
         </tbody>

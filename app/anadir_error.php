@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+// Verifica si el usuario ha iniciado sesión y es profesor
 if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] !== 'profesor') {
     header("Location: login.php");
     exit();
@@ -8,32 +9,34 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] !== 'profesor') {
 
 require 'conexion.php';
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$nombre_bd", $usuario, $contrasena);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$id_asignatura = $_GET['id_asignatura'] ?? null;
+$id_clase = $_GET['id_clase'] ?? null;  // Asegúrate de que también tomas el id_clase
+if (!$id_asignatura) {
+    die("ID de asignatura no especificado.");
+}
 
-    // Obtener ID de la asignatura desde la URL
-    if (!isset($_GET['id_asignatura'])) {
-        die("ID de asignatura no especificado.");
-    }
-    $id_asignatura = $_GET['id_asignatura'];
+$stmt = $pdo->prepare("SELECT * FROM errores_comunes WHERE id_asignatura = ?");
+$stmt->execute([$id_asignatura]);
+$errores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Manejar inserción
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $tema = $_POST['tema'];
-        $descripcion = $_POST['descripcion'];
+$mensaje = "";
 
-        if (!empty($tema) && !empty($descripcion)) {
-            $stmt = $pdo->prepare("INSERT INTO errores_comunes (tema, descripcion, id_asignatura) VALUES (?, ?, ?)");
-            $stmt->execute([$tema, $descripcion, $id_asignatura]);
-            header("Location: errores_comunes.php?id_asignatura=" . $id_asignatura);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $tema = trim($_POST['tema']);
+    $descripcion = trim($_POST['descripcion']);
+
+    if ($tema && $descripcion) {
+        $stmt = $pdo->prepare("INSERT INTO errores_comunes (tema, descripcion, id_asignatura) VALUES (?, ?, ?)");
+
+        if ($stmt->execute([$tema, $descripcion, $_GET['id_asignatura']])) {
+            header("Location: errores_comunes.php?id_asignatura=" . $_GET['id_asignatura']);
             exit();
+        } else {
+            $mensaje = "<div class='alert alert-danger'>Error al añadir el error común.</div>";
         }
+    } else {
+        $mensaje = "<div class='alert alert-warning'>Por favor, rellena todos los campos.</div>";
     }
-
-} catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
-    exit();
 }
 ?>
 
@@ -42,7 +45,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Añadir Nuevo Error</title>
+    <title>Añadir Error Común</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <style>
@@ -50,85 +53,76 @@ try {
             display: flex;
             height: 100vh;
             margin: 0;
-            flex-direction: row;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f5f5;
         }
-
         .sidebar {
             width: 250px;
             background-color: #f8f9fa;
             padding: 20px;
-            position: fixed;
-            height: 100%;
-            top: 0;
-            left: 0;
+            padding-top: 40px;
+            border-right: 1px solid #ddd;
         }
-
+        .content {
+            flex-grow: 1;
+            padding: 40px;
+        }
         .nav-link {
-            color: black !important;
-            font-size: 18px;
+            color: #333 !important;
+            font-size: 16px;
             display: flex;
             align-items: center;
         }
-
         .nav-link:hover {
             background-color: #e0e0e0;
             border-radius: 5px;
         }
-
         .nav-link i {
             margin-right: 8px;
             font-size: 1.2rem;
         }
-
-        .content {
-            margin-left: 270px;
-            padding: 20px;
-            flex: 1;
-        }
-
-        .form-container h5 {
-            margin-bottom: 20px;
-        }
-
     </style>
 </head>
 <body>
+<div class="sidebar">
+    <h3 class="mb-5 text-center fw-bold pb-2 border-bottom border-dark">Menú</h3>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a href="inicio_profesor.php" class="nav-link"><i class="bi bi-house-door"></i> Inicio</a>
+        </li>
+        <li class="nav-item">
+            <a href="generar_actividad.php?id_clase=<?= $id_clase ?>&id_asignatura=<?= $id_asignatura ?>" class="nav-link"><i class="bi bi-plus-square"></i> Generar Actividad</a>
+        </li>
+        <li class="nav-item">
+            <a href="actividades.php?id_clase=<?= $id_clase ?>" class="nav-link"><i class="bi bi-list-ul"></i> Gestionar Actividades</a>
+        </li>
+        <li class="nav-item">
+            <a href="errores_comunes.php?id_asignatura=<?= $id_asignatura ?>&id_clase=<?= $id_clase ?>" class="nav-link"><i class="bi bi-exclamation-circle"></i> Errores Comunes</a>
+        </li>
+        <li class="nav-item">
+            <a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a>
+        </li>
+    </ul>
+</div>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h3>App TFG</h3>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a href="inicio_profesor.php" class="nav-link"><i class="bi bi-house-door"></i> Inicio</a>
-            </li>
-            <li class="nav-item">
-                <a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a>
-            </li>
-        </ul>
-    </div>
+<div class="container mt-5">
+    <h2>Añadir Nuevo Error Común</h2>
+    <?= $mensaje ?>
 
-    <!-- Contenido -->
-    <div class="content">
-        <h2>Añadir Nuevo Error</h2>
-        <p>Rellena el formulario a continuación para añadir un nuevo error común en la asignatura.</p>
+    <form method="POST" class="mt-4">
+        <div class="mb-3">
+            <label for="tema" class="form-label">Tema</label>
+            <input type="text" name="tema" id="tema" class="form-control" required>
+        </div>
 
-        <h5>Añadir Nuevo Error</h5>
-        <form method="POST" class="mb-4">
-            <div class="row g-2 align-items-end">
-                <div class="col-md-3">
-                    <label for="tema" class="form-label">Tema</label>
-                    <input type="text" name="tema" id="tema" class="form-control" required>
-                </div>
-                <div class="col-md-6">
-                    <label for="descripcion" class="form-label">Descripción</label>
-                    <input type="text" name="descripcion" id="descripcion" class="form-control" required>
-                </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary w-100">Añadir Error</button>
-                </div>
-            </div>
-        </form>
-    </div>
+        <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <input type="text" name="descripcion" id="descripcion" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    </form>
+</div>
 
 </body>
 </html>

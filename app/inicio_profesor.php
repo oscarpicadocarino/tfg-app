@@ -29,14 +29,19 @@ try {
         WHERE c.id_profesor = ?  -- Aquí filtras por el id del profesor
     ");
     $stmt->execute([$id_profesor]);
-    $asignaturas_clases = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Verifica si el profesor tiene asignaturas o clases
+    if ($stmt->rowCount() == 0) {
+        echo "<div class='alert alert-warning'>No gestionas ninguna asignatura o clase todavía.</div>";
+    } else {
+        $asignaturas_clases = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 } catch (PDOException $e) {
     echo "Error de conexión: " . $e->getMessage();
     exit();
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -86,46 +91,44 @@ try {
             transform: translateY(-5px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
+        .feature-box i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #0d6efd;
+        }
     </style>
 </head>
 <body>
 <div class="sidebar">
     <h3 class="mb-5 text-center fw-bold pb-2 border-bottom border-dark">Menú</h3>
     <ul class="nav flex-column">
-            <li class="nav-item">
-                <a href="inicio_admin.php" class="nav-link"><i class="bi bi-house-door"></i> Inicio</a>
-            </li>
-            <li class="nav-item">
-                <a href="gestion_usuario.php" class="nav-link"><i class="bi bi-person-plus"></i> Gestionar Usuarios</a>
-            </li>
-            <li class="nav-item">
-                <a href="ver_clases.php" class="nav-link"><i class="bi bi-plus-circle"></i> Gestionar Clases</a>
-            </li>
-            <li class="nav-item">
-                <a href="asignar_alumnos.php" class="nav-link"><i class="bi bi-person-check"></i> Asignar Alumnos</a>
-            </li>
-            <li class="nav-item">
-                <a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a>
-            </li>
-        </ul>
+        <li class="nav-item">
+            <a href="inicio_profesor.php" class="nav-link"><i class="bi bi-house-door"></i> Inicio</a>
+        </li>
+        <li class="nav-item">
+            <a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a>
+        </li>
+    </ul>
 </div>
-
-    <div class="container mt-5">
-        <h2 class="mb-4">Asignaturas y Clases</h2>
+<div class="content">
+    <h2 class="mb-5 fw-semibold">
+        Hola <?= isset($_SESSION['nombre']) ? htmlspecialchars($_SESSION['nombre']) : 'Profesor' ?>! 👋
+    </h2>
+    <div class="container">
         <div class="container-fluid">
             <div class="row g-4">
-                <?php if (count($asignaturas_clases) > 0): ?>
+                <?php if (isset($asignaturas_clases) && count($asignaturas_clases) > 0): ?>
                     <?php foreach ($asignaturas_clases as $asignatura_clase): ?>
                         <div class="col-md-6">
-                            <a href="asignatura_profesor.php?id=<?= $asignatura_clase['id_asignatura'] ?>" class="text-decoration-none text-dark">
+                            <a href="clase_profesor.php?id_clase=<?= $asignatura_clase['id_clase'] ?>&id_asignatura=<?= $asignatura_clase['id_asignatura'] ?>" class="text-decoration-none text-dark">
                                 <div class="card p-4 shadow-sm border-0">
                                     <div class="d-flex align-items-center">
-                                        <i class="bi bi-journal-bookmark me-3" style="font-size: 2.5rem;"></i>
+                                        <i class="bi bi-journal-code me-3" style="font-size: 2.5rem; color: #0d6efd;"></i>
                                         <h4 class="fw-bold mb-0"><?= htmlspecialchars($asignatura_clase['nombre_asignatura']) ?></h4>
                                     </div>
                                     <p class="mt-3"><?= htmlspecialchars($asignatura_clase['descripcion_asignatura']) ?></p>
                                     <div class="mt-2">
-                                        <h5>Clases:</h5>
+                                        <h5>Clase:</h5>
                                         <ul>
                                             <li><?= htmlspecialchars($asignatura_clase['nombre_clase']) ?></li>
                                         </ul>
@@ -144,5 +147,6 @@ try {
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

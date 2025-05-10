@@ -100,6 +100,12 @@ $errores = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </form>
 
+    <?php if (empty($errores)): ?>
+    <div class="alert alert-info mt-4" role="alert">
+        No se han registrado errores comunes para esta asignatura.
+    </div>
+<?php else: ?>
+
     <!-- Tabla de errores comunes -->
     <table class="table table-bordered table-hover">
         <thead class="table-custom">
@@ -131,3 +137,4 @@ $errores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 </body>
 </html>
+<?php endif; ?>

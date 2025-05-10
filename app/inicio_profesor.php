@@ -86,10 +86,17 @@ try {
         }
         .card {
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .card-body {
+            flex-grow: 1;
         }
         .feature-box i {
             font-size: 2.5rem;
@@ -119,19 +126,21 @@ try {
             <div class="row g-4">
                 <?php if (isset($asignaturas_clases) && count($asignaturas_clases) > 0): ?>
                     <?php foreach ($asignaturas_clases as $asignatura_clase): ?>
-                        <div class="col-md-6">
-                            <a href="clase_profesor.php?id_clase=<?= $asignatura_clase['id_clase'] ?>&id_asignatura=<?= $asignatura_clase['id_asignatura'] ?>" class="text-decoration-none text-dark">
-                                <div class="card p-4 shadow-sm border-0">
+                        <div class="col-md-6 d-flex">
+                            <a href="clase_profesor.php?id_clase=<?= $asignatura_clase['id_clase'] ?>&id_asignatura=<?= $asignatura_clase['id_asignatura'] ?>" class="text-decoration-none text-dark w-100">
+                                <div class="card p-4 shadow-sm border-0 w-100">
                                     <div class="d-flex align-items-center">
                                         <i class="bi bi-journal-code me-3" style="font-size: 2.5rem; color: #0d6efd;"></i>
                                         <h4 class="fw-bold mb-0"><?= htmlspecialchars($asignatura_clase['nombre_asignatura']) ?></h4>
                                     </div>
-                                    <p class="mt-3"><?= htmlspecialchars($asignatura_clase['descripcion_asignatura']) ?></p>
-                                    <div class="mt-2">
-                                        <h5>Clase:</h5>
-                                        <ul>
-                                            <li><?= htmlspecialchars($asignatura_clase['nombre_clase']) ?></li>
-                                        </ul>
+                                    <div class="card-body px-0 pt-3 pb-0">
+                                        <p class="mb-2"><?= htmlspecialchars($asignatura_clase['descripcion_asignatura']) ?></p>
+                                        <div>
+                                            <h5 class="mb-1">Clase:</h5>
+                                            <ul class="mb-0">
+                                                <li><?= htmlspecialchars($asignatura_clase['nombre_clase']) ?></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </a>

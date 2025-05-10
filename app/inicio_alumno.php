@@ -2,7 +2,6 @@
 // inicio_alumno.php
 session_start();
 
-// Verifica si el usuario ha iniciado sesión y es alumno
 if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] !== 'alumno') {
     header("Location: login.php");
     exit();
@@ -16,12 +15,13 @@ try {
 
     $id_alumno = $_SESSION['user_id'];
 
-    // Consulta para obtener las clases del alumno con el nombre y descripción de la asignatura
+    // Ahora también obtenemos el nombre de la clase
     $stmt = $pdo->prepare("
         SELECT 
             c.id_clase, 
             a.nombre AS nombre_asignatura, 
-            a.descripcion
+            a.descripcion AS descripcion_asignatura, 
+            c.nombre AS nombre_clase
         FROM clases c
         JOIN alumnos_clases ca ON c.id_clase = ca.id_clase
         JOIN asignaturas a ON c.id_asignatura = a.id_asignatura
@@ -49,20 +49,23 @@ try {
             display: flex;
             height: 100vh;
             margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f5f5;
         }
         .sidebar {
             width: 250px;
             background-color: #f8f9fa;
             padding: 20px;
+            padding-top: 40px;
+            border-right: 1px solid #ddd;
         }
         .content {
             flex-grow: 1;
-            padding: 20px;
-            overflow-y: auto;
+            padding: 40px;
         }
         .nav-link {
-            color: black !important;
-            font-size: 18px;
+            color: #333 !important;
+            font-size: 16px;
             display: flex;
             align-items: center;
         }
@@ -81,11 +84,26 @@ try {
             transform: translateY(-5px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
+        .feature-box i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #0d6efd;
+        }
+        .card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-body {
+            flex-grow: 1;
+        }
+
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <h3>App TFG</h3>
+        <h3 class="mb-5 text-center fw-bold pb-2 border-bottom border-dark">Menú</h3>
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a href="inicio_alumno.php" class="nav-link"><i class="bi bi-house-door"></i> Inicio</a>
@@ -94,25 +112,34 @@ try {
                 <a href="chatbot.php" class="nav-link"><i class="bi bi-chat-dots"></i> ChatBot</a>
             </li>
             <li class="nav-item">
-                <a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a>
+                <a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a>
             </li>
         </ul>
     </div>
 
-    <div class="content">
-        <h2 class="mb-4">Asignaturas Disponibles</h2>
+<div class="content">
+    <h2 class="mb-5 fw-semibold">Hola <?= isset($_SESSION['nombre']) ? htmlspecialchars($_SESSION['nombre']) : 'Alumno' ?>! 👋</h2>
+    <div class="container">
         <div class="container-fluid">
             <div class="row g-4">
-                <?php if (count($clases) > 0): ?>
+                <?php if (isset($clases) && count($clases) > 0): ?>
                     <?php foreach ($clases as $clase): ?>
-                        <div class="col-md-6">
-                            <a href="asignatura_alumno.php?id=<?= $clase['id_clase'] ?>" class="text-decoration-none text-dark">
-                                <div class="card p-4 shadow-sm border-0">
+                        <div class="col-md-6 d-flex">
+                            <a href="asignatura_alumno.php?id_clase=<?= $clase['id_clase'] ?>" class="text-decoration-none text-dark w-100">
+                                <div class="card p-4 shadow-sm border-0 w-100">
                                     <div class="d-flex align-items-center">
-                                        <i class="bi bi-journal-bookmark me-3" style="font-size: 2.5rem;"></i>
+                                        <i class="bi bi-journal-code me-3" style="font-size: 2.5rem; color: #0d6efd;"></i>
                                         <h4 class="fw-bold mb-0"><?= htmlspecialchars($clase['nombre_asignatura']) ?></h4>
                                     </div>
-                                    <p class="mt-3"><?= htmlspecialchars($clase['descripcion']) ?></p>
+                                    <div class="card-body px-0 pt-3 pb-0">
+                                        <p class="mb-2"><?= htmlspecialchars($clase['descripcion_asignatura']) ?></p>
+                                        <div>
+                                            <h5 class="mb-1">Clase:</h5>
+                                            <ul class="mb-0">
+                                                <li><?= htmlspecialchars($clase['nombre_clase']) ?></li>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </a>
                         </div>
@@ -120,7 +147,7 @@ try {
                 <?php else: ?>
                     <div class="col-12">
                         <div class="alert alert-warning" role="alert">
-                            No estás matriculado en ninguna clase todavía.
+                            No estás matriculado en ninguna asignatura o clase todavía.
                         </div>
                     </div>
                 <?php endif; ?>

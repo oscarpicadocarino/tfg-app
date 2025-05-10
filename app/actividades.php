@@ -87,7 +87,7 @@ $actividades = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="container mt-5">
     <h1 class="mb-4">Actividades de la Clase</h1>
 
-        <?php if (empty($errores)): ?>
+        <?php if (empty($actividades)): ?>
     <div class="alert alert-info mt-4" role="alert">
         No se han registrado actividades para esta clase.
     </div>

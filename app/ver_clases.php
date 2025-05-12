@@ -174,7 +174,7 @@ try {
         </tbody>
     </table>
     <a href="crear_clase.php" class="btn btn-success">
-    Añadir Clase <i class="bi bi-person-plus"></i>
+    Añadir Clase <i class="bi bi-plus"></i>
 </a>
 </div>
 </body>

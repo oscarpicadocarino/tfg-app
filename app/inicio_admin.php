@@ -43,7 +43,7 @@ require 'conexion.php';
         align-items: center;
     }
     .nav-link:hover {
-        background-color: #e0e0e0;
+        background-color: #f5f5f5;
         border-radius: 5px;
     }
     .nav-link i {

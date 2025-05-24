@@ -65,7 +65,6 @@ if ($id_clase) {
             font-size: 16px;
             display: flex;
             align-items: center;
-            margin-bottom: 0.5rem;
         }
         .nav-link:hover {
             background-color: #e0e0e0;
@@ -89,6 +88,18 @@ if ($id_clase) {
             white-space: pre-wrap;
             word-wrap: break-word;
         }
+        .btn-custom-blue {
+            background-color: rgb(97, 160, 255);
+            border-color: rgb(97, 160, 255);
+            color: white;
+        }
+
+        .btn-custom-blue:hover {
+            background-color: rgb(77, 140, 230); /* un azul un poco más oscuro al hacer hover */
+            border-color: rgb(77, 140, 230);
+            color: white;
+        }
+
     </style>
 </head>
 <body>
@@ -121,7 +132,9 @@ if ($id_clase) {
         <h5>Código entregado:</h5>
         <pre><?= htmlspecialchars($entrega['codigo']) ?></pre>
 
-        <a href="ver_entregas.php?id=<?= urlencode($id_clase) ?>" class="btn btn-secondary mt-3">Volver a entregas</a>
+        <a href="ver_entregas.php?id=<?= urlencode($id_clase) ?>" class="btn btn-secondary mt-3" style="background-color: rgb(97, 160, 255); border-color: rgb(97, 160, 255);">
+            Volver a entregas
+        </a>
     </div>
 </body>
 </html>

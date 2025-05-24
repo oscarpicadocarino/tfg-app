@@ -134,8 +134,6 @@ $entregas = $stmtEntregas->fetchAll(PDO::FETCH_ASSOC);
             </tbody>
         </table>
     <?php endif; ?>
-
-    <a href="actividades.php?id_clase=<?= htmlspecialchars($id_clase) ?>" class="btn btn-secondary mt-3">Volver a Actividades</a>
 </div>
 </body>
 </html>

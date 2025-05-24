@@ -133,7 +133,7 @@ try {
                         <tr>
                             <td><?= htmlspecialchars($act['titulo']) ?></td>
                             <td>
-                                <a href="ver_actividad_alumno.php?id=<?= $act['id'] ?>" class="btn btn-sm btn-info">Ver</a>
+                                <a href="resolver_actividad.php?id=<?= $act['id'] ?>" class="btn btn-sm btn-success">Resolver</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

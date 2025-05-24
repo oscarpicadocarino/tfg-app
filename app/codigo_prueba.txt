@@ -1,0 +1,13 @@
+#include <iostream>
+#include <string>
+
+int main() {
+    std::string nombre;
+
+    std::cout << "Hola, ¿cómo te llamas? ";
+    std::getline(std::cin, nombre);
+
+    std::cout << "¡Encantado de conocerte, " << nombre << "!" << std::endl;
+
+    return 0;
+}

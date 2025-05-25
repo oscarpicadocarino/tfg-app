@@ -13,11 +13,21 @@ $stmtClase->execute([$id_clase]);
 $clase = $stmtClase->fetch(PDO::FETCH_ASSOC);
 $id_asignatura = $clase['id_asignatura'] ?? null;
 
-$stmt = $pdo->prepare("SELECT * FROM actividad WHERE id_clase = ?");
-$stmt->execute([$id_clase]);
-$actividades = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Filtro de tema desde GET
+$tema_filtro = $_GET['tema'] ?? 'todos';
 
+// Obtener errores comunes por asignatura
+$errores_stmt = $pdo->prepare("SELECT id_error, descripcion, tema FROM errores_comunes WHERE id_asignatura = ?");
+$errores_stmt->execute([$id_asignatura]);
+$errores_comunes = $errores_stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Agrupar errores por tema, aplicando filtro
+$errores_por_tema = [];
+foreach ($errores_comunes as $error) {
+    if ($tema_filtro === 'todos' || $error['tema'] === $tema_filtro) {
+        $errores_por_tema[$error['tema']][] = $error;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -70,6 +80,7 @@ $actividades = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 20px;
             overflow-y: auto;
             margin-bottom: 20px;
+            white-space: pre-wrap;
         }
         .chat-message {
             margin-bottom: 15px;
@@ -85,6 +96,8 @@ $actividades = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 10px 15px;
             border-radius: 15px;
             max-width: 70%;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
         .user .bubble {
             background-color: #d1e7dd;
@@ -96,15 +109,24 @@ $actividades = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
         .chat-input {
             display: flex;
+            flex-direction: column;
         }
-        .chat-input input {
+        .chat-input textarea {
             flex-grow: 1;
             padding: 10px;
             border-radius: 10px;
             border: 1px solid #ccc;
+            resize: vertical;
+            font-family: monospace, monospace;
+            font-size: 1rem;
+            min-height: 60px;
         }
         .chat-input button {
-            margin-left: 10px;
+            margin-top: 10px;
+            align-self: flex-end;
+        }
+        .errores-selector {
+            margin-bottom: 15px;
         }
     </style>
 </head>
@@ -133,6 +155,44 @@ $actividades = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="content">
     <h2 class="fw-semibold mb-4">Generador de Actividades por IA</h2>
 
+    <!-- Filtro de errores comunes -->
+    <div class="errores-selector">
+        <form method="GET" class="mb-3">
+            <input type="hidden" name="id_clase" value="<?= htmlspecialchars($id_clase) ?>">
+            <label for="tema" class="form-label fw-semibold">Filtrar por tema:</label>
+            <select name="tema" id="tema" class="form-select mb-3" onchange="this.form.submit()">
+                <option value="todos" <?= $tema_filtro === 'todos' ? 'selected' : '' ?>>Todos</option>
+                <?php foreach (array_unique(array_column($errores_comunes, 'tema')) as $tema): ?>
+                    <option value="<?= htmlspecialchars($tema) ?>" <?= $tema_filtro === $tema ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($tema) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </form>
+
+        <label class="form-label">Errores comunes a tener en cuenta:</label>
+        <div class="border rounded p-3" style="background-color: #fff; max-height: 250px; overflow-y: auto;">
+            <?php if (!empty($errores_por_tema)): ?>
+                <?php foreach ($errores_por_tema as $tema => $errores): ?>
+                    <div>
+                        <strong><?= htmlspecialchars($tema) ?></strong>
+                        <?php foreach ($errores as $error): ?>
+                            <div class="form-check ms-3">
+                                <input class="form-check-input error-checkbox" type="checkbox" value="<?= htmlspecialchars($error['descripcion']) ?>" id="error-<?= $error['id_error'] ?>">
+                                <label class="form-check-label" for="error-<?= $error['id_error'] ?>">
+                                    <?= htmlspecialchars($error['descripcion']) ?>
+                                </label>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p class="text-muted">No hay errores comunes disponibles para este tema.</p>
+            <?php endif; ?>
+        </div>
+        <small class="text-muted">Marca los errores que deseas considerar para esta actividad.</small>
+    </div>
+
     <div class="chat-box" id="chat-box">
         <div class="chat-message assistant">
             <div class="bubble">
@@ -143,41 +203,61 @@ $actividades = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <form id="chat-form" class="chat-input">
-        <input type="text" id="user-input" placeholder="Escribe tu mensaje aquí..." required>
+        <textarea id="user-input" placeholder="Escribe tu mensaje aquí..." required></textarea>
         <button class="btn btn-primary" type="submit"><i class="bi bi-send"></i></button>
     </form>
 </div>
 
 <script>
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 document.getElementById("chat-form").addEventListener("submit", async function (e) {
     e.preventDefault();
     const input = document.getElementById("user-input");
     const mensaje = input.value.trim();
     if (!mensaje) return;
 
-    // Mostrar mensaje del usuario
+    const erroresSeleccionados = Array.from(document.querySelectorAll(".error-checkbox:checked"))
+    .map(cb => cb.value)
+    .join(", ");
+
+    const mensajeFinal = erroresSeleccionados
+        ? mensaje + "\n\nTen en cuenta los siguientes errores comunes que suelen cometer los estudiantes:\n" + erroresSeleccionados
+        : mensaje;
+
     const chatBox = document.getElementById("chat-box");
+
     const userMessage = document.createElement("div");
     userMessage.className = "chat-message user";
-    userMessage.innerHTML = `<div class="bubble">${mensaje}</div>`;
+    userMessage.innerHTML = `<div class="bubble"><pre>${escapeHtml(mensaje)}</pre></div>`;
     chatBox.appendChild(userMessage);
 
-    chatBox.scrollTop = chatBox.scrollHeight;
-    input.value = "";
-
-    // Llamar a la IA (esto simula de momento)
     const assistantMessage = document.createElement("div");
     assistantMessage.className = "chat-message assistant";
     assistantMessage.innerHTML = `<div class="bubble"><em>Generando actividad...</em></div>`;
     chatBox.appendChild(assistantMessage);
     chatBox.scrollTop = chatBox.scrollHeight;
+    input.value = "";
 
-    // Aquí deberías hacer un fetch a procesar_actividad.php (lo hacemos falso de momento)
-    setTimeout(() => {
-        assistantMessage.innerHTML = `<div class="bubble"><strong>Actividad generada:</strong><br><br><b>Propósito:</b> Comprender recursividad.<br><b>Enunciado:</b> Diseña una función recursiva que calcule la suma de los primeros N números naturales.<br><b>Evaluación:</b> Corrección del algoritmo, uso de recursividad, legibilidad.</div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }, 1500);
+    try {
+        const res = await fetch("procesar_actividad.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ mensaje: mensajeFinal })
+        });
+        const data = await res.json();
+        assistantMessage.innerHTML = `<div class="bubble"><pre>${escapeHtml(data.respuesta)}</pre></div>`;
+    } catch (err) {
+        assistantMessage.innerHTML = `<div class="bubble">Error al generar la actividad.</div>`;
+    }
+
+    chatBox.scrollTop = chatBox.scrollHeight;
 });
 </script>
+
 </body>
 </html>

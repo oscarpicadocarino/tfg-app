@@ -1,0 +1,36 @@
+{
+  "id": "chatcmpl-Bb2cQbYASjIE4NUdOxfKPAXp1RF5V",
+  "object": "chat.completion",
+  "created": 1748167902,
+  "model": "gpt-3.5-turbo-0125",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Propósito de la actividad: \nComprender la diferencia entre los atributos de clase y los atributos de instancia en programación orientada a objetos.\n\nObjetivo de aprendizaje / concepto clave que trabaja:\nIdentificar y explicar la diferencia entre los atributos de clase y los atributos de instancia, y comprender cómo se comportan en la programación orientada a objetos.\n\nEnunciado de la actividad:\nDentro del siguiente fragmento de código, identifica y corrige los errores relacionados con la asignación y modificación de los atributos de clase y de instancia. Explica en qué se diferencian y cómo funcionan en el contexto de la programación orientada a objetos.\n\nNivel de complejidad:\nIntermedio.\n\nTiempo necesario:\n30 minutos.\n\nEvaluación:\nLos estudiantes serán evaluados en su capacidad para identificar y corregir los errores relacionados con los atributos de clase y de instancia en el código proporcionado, así como en su capacidad para explicar la diferencia entre estos dos tipos de atributos.\n\nFragmento de código:\n```python\nclass Coche:\n    ruedas = 4  # Atributo de clase\n\n    def __init__(self, color):\n        self.color = color  # Atributo de instancia\n\n    def pintar_coche(self, nuevo_color):\n        color = nuevo_color  # Error: No se está modificando el atributo de instancia\n```\n\n¡Hora de analizar y corregir el código, estudiantes!",
+        "refusal": null,
+        "annotations": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 298,
+    "completion_tokens": 321,
+    "total_tokens": 619,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "service_tier": "default",
+  "system_fingerprint": null
+}

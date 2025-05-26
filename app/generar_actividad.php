@@ -6,12 +6,15 @@ if (!$id_clase) {
     die("ID de clase no especificado.");
 }
 
-// Obtener id_asignatura correctamente usando id_clase
+// Obtener id_asignatura usando id_clase
 $stmtClase = $pdo->prepare("SELECT id_asignatura FROM clases WHERE id_clase = ?");
 $stmtClase->execute([$id_clase]);
-
 $clase = $stmtClase->fetch(PDO::FETCH_ASSOC);
 $id_asignatura = $clase['id_asignatura'] ?? null;
+
+if (!$id_asignatura) {
+    die("Asignatura no encontrada para la clase especificada.");
+}
 
 // Filtro de tema desde GET
 $tema_filtro = $_GET['tema'] ?? 'todos';
@@ -33,10 +36,11 @@ foreach ($errores_comunes as $error) {
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Generador de Actividades</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
+    
     <style>
         body {
             display: flex;
@@ -196,8 +200,7 @@ foreach ($errores_comunes as $error) {
     <div class="chat-box" id="chat-box">
         <div class="chat-message assistant">
             <div class="bubble">
-                Hola 👋 Soy tu asistente para generar actividades educativas. Puedes escribirme, por ejemplo:<br>
-                <i>“Diseña una actividad sobre estructuras de datos para nivel medio”</i>
+                Hola 👋 <br>
             </div>
         </div>
     </div>
@@ -222,12 +225,10 @@ document.getElementById("chat-form").addEventListener("submit", async function (
     if (!mensaje) return;
 
     const erroresSeleccionados = Array.from(document.querySelectorAll(".error-checkbox:checked"))
-    .map(cb => cb.value)
-    .join(", ");
+        .map(cb => cb.value)
+        .join(", ");
 
-    const mensajeFinal = erroresSeleccionados
-        ? mensaje + "\n\nTen en cuenta los siguientes errores comunes que suelen cometer los estudiantes:\n" + erroresSeleccionados
-        : mensaje;
+    const mensajeFinal = mensaje;
 
     const chatBox = document.getElementById("chat-box");
 
@@ -244,11 +245,19 @@ document.getElementById("chat-form").addEventListener("submit", async function (
     input.value = "";
 
     try {
+        const idClase = <?= json_encode($id_clase) ?>;
+
         const res = await fetch("procesar_actividad.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ mensaje: mensajeFinal })
+            body: JSON.stringify({
+                mensaje: mensajeFinal,
+                id_clase: idClase,
+                errores_seleccionados: Array.from(document.querySelectorAll(".error-checkbox:checked")).map(cb => cb.value)
+            })
         });
+
+        if (!res.ok) throw new Error('Error en la respuesta');
         const data = await res.json();
         assistantMessage.innerHTML = `<div class="bubble"><pre>${escapeHtml(data.respuesta)}</pre></div>`;
     } catch (err) {

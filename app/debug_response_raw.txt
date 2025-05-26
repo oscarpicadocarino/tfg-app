@@ -1,0 +1,36 @@
+{
+  "id": "chatcmpl-BbWFml8XBXMApmBk5yDdJB2kUQctk",
+  "object": "chat.completion",
+  "created": 1748281818,
+  "model": "gpt-4-turbo-2024-04-09",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "### Actividad: Identificación y Corrección de Errores en Código Java\n\n#### Propósito:\nEsta actividad tiene como objetivo fortalecer la capacidad de los estudiantes para identificar, analizar y corregir errores comunes en un programa de Java, especialmente enfocándose en los conceptos de atributos de clase contra atributos de instancia y otros errores sintácticos o lógicos comunes.\n\n#### Objetivo de Aprendizaje:\n- Comprender y diferenciar entre atributos de clase y atributos de instancia.\n- Mejorar habilidades de depuración y corrección de código.\n- Aplicar conocimientos teóricos de programación orientada a objetos en la práctica.\n\n#### Nivel: Intermedio\n\n#### Tiempo Estimado: 2 horas\n\n#### Enunciado:\nSe proporciona un fragmento de código Java que contiene varios errores intencionales relacionados con el uso incorrecto de atributos de clase y de instancia, así como otros errores sintácticos y lógicos. Los estudiantes deben identificar y corregir todos los errores en el código. El código simula un sistema simple para gestionar una librería, incluyendo clases para `Libro`, `Autor` y `Libreria`.\n\n```java\npublic class Autor {\n    public static String nombre;\n    public static int edad;\n\n    public Autor(String nombre, int edad) {\n        this.nombre = nombre;\n        this.edad = edad;\n    }\n}\n\npublic class Libro {\n    public static String titulo;\n    public static Autor autor;\n    \n    public Libro(String titulo, Autor autor) {\n        this.titulo = titulo;\n        this.autor = autor;\n    }\n    \n    public static void mostrarInfo() {\n        System.out.println(\"Título: \" + titulo + \", Autor: \" + autor.nombre);\n    }\n}\n\npublic class Libreria {\n    public static void main(String[] args) {\n        Autor autor1 = new Autor(\"Gabriel García Márquez\", 70);\n        Libro libro1 = new Libro(\"Cien años de soledad\", autor1);\n        \n        libro1.mostrarInfo();\n        \n        Autor autor2 = new Autor(\"Julio Cortázar\", 76);\n        Libro libro2 = new Libro(\"Rayuela\", autor2);\n        \n        libro2.mostrarInfo();\n    }\n}\n```\n\n#### Instrucciones:\n1. Identifica los errores en el código proporcionado.\n2. Corrige los errores para que cada libro pueda tener su propio título y autor de manera independiente.\n3. Asegúrate de que el método `mostrarInfo()` muestre correctamente la información del libro y su autor correspondiente.\n4. Explica las correcciones realizadas y por qué cada cambio era necesario.\n\n#### Evaluación:\nLa evaluación se basará en los siguientes criterios:\n- Correcta identificación de todos los errores en el código.\n- Adecuadas correcciones realizadas que permitan que el programa funcione como se espera.\n- Claridad y precisión en la explicación de las correcciones realizadas.\n- Cumplimiento de las normas de codificación y estilo de Java.",
+        "refusal": null,
+        "annotations": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 813,
+    "completion_tokens": 675,
+    "total_tokens": 1488,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "service_tier": "default",
+  "system_fingerprint": "fp_de235176ee"
+}

@@ -33,6 +33,16 @@ services:
       PMA_HOST: db
       PMA_USER: usuario       
       PMA_PASSWORD: password
+      
+  scraper:
+    build:
+      context: ./webscrapping
+    container_name: tfg_app_scraper
+    depends_on:
+      - db
+    volumes:
+      - ./webscrapping:/app
+
 
 volumes:
   db_data:

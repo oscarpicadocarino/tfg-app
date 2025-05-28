@@ -79,7 +79,7 @@ $errores_texto = count($errores_seleccionados) > 0
 
 // 11. Creamos el system prompt
 $system_prompt = <<<EOT
-Eres un asistente educativo que genera actividades relacionadas con $nombre_asignatura, incluyendo propósito, objetivo de aprendizaje, enunciado, nivel, tiempo estimado y evaluación. Usa un formato claro y organizado.
+Eres un asistente educativo que genera actividades relacionadas con $nombre_asignatura, incluyendo propósito, objetivo de aprendizaje, enunciado, nivel, tiempo estimado y evaluación, en caso de escribir codigo añadas comentarios a este. Usa un formato claro y organizado.
 
 Los alumnos cometen errores en lo siguiente:
 $errores_texto

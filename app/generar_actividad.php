@@ -40,7 +40,6 @@ foreach ($errores_comunes as $error) {
     <title>Generador de Actividades</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
-    
     <style>
         body {
             display: flex;
@@ -159,7 +158,6 @@ foreach ($errores_comunes as $error) {
 <div class="content">
     <h2 class="fw-semibold mb-4">Generador de Actividades por IA</h2>
 
-    <!-- Filtro de errores comunes -->
     <div class="errores-selector">
         <form method="GET" class="mb-3">
             <input type="hidden" name="id_clase" value="<?= htmlspecialchars($id_clase) ?>">
@@ -194,14 +192,11 @@ foreach ($errores_comunes as $error) {
                 <p class="text-muted">No hay errores comunes disponibles para este tema.</p>
             <?php endif; ?>
         </div>
-        <small class="text-muted">Marca los errores que deseas considerar para esta actividad.</small>
     </div>
 
     <div class="chat-box" id="chat-box">
         <div class="chat-message assistant">
-            <div class="bubble">
-                Hola 👋 <br>
-            </div>
+            <div class="bubble">Hola 👋 <br></div>
         </div>
     </div>
 
@@ -209,6 +204,8 @@ foreach ($errores_comunes as $error) {
         <textarea id="user-input" placeholder="Escribe tu mensaje aquí..." required></textarea>
         <button class="btn btn-primary" type="submit"><i class="bi bi-send"></i></button>
     </form>
+
+    <div id="guardar-actividad-container" class="mt-3"></div>
 </div>
 
 <script>
@@ -227,8 +224,6 @@ document.getElementById("chat-form").addEventListener("submit", async function (
     const erroresSeleccionados = Array.from(document.querySelectorAll(".error-checkbox:checked"))
         .map(cb => cb.value)
         .join(", ");
-
-    const mensajeFinal = mensaje;
 
     const chatBox = document.getElementById("chat-box");
 
@@ -251,7 +246,7 @@ document.getElementById("chat-form").addEventListener("submit", async function (
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                mensaje: mensajeFinal,
+                mensaje: mensaje,
                 id_clase: idClase,
                 errores_seleccionados: Array.from(document.querySelectorAll(".error-checkbox:checked")).map(cb => cb.value)
             })
@@ -259,7 +254,17 @@ document.getElementById("chat-form").addEventListener("submit", async function (
 
         if (!res.ok) throw new Error('Error en la respuesta');
         const data = await res.json();
+
         assistantMessage.innerHTML = `<div class="bubble"><pre>${escapeHtml(data.respuesta)}</pre></div>`;
+
+        const contenedor = document.getElementById("guardar-actividad-container");
+        contenedor.innerHTML = `
+            <form method="POST" action="guardar_actividad.php">
+                <input type="hidden" name="id_clase" value="${idClase}">
+                <input type="hidden" name="contenido" value="${escapeHtml(data.respuesta).replace(/"/g, '&quot;')}">
+                <button type="submit" class="btn btn-success mt-2"><i class="bi bi-save"></i> Guardar actividad</button>
+            </form>
+        `;
     } catch (err) {
         assistantMessage.innerHTML = `<div class="bubble">Error al generar la actividad.</div>`;
     }
@@ -267,6 +272,5 @@ document.getElementById("chat-form").addEventListener("submit", async function (
     chatBox.scrollTop = chatBox.scrollHeight;
 });
 </script>
-
 </body>
 </html>

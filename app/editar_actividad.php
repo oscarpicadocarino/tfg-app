@@ -32,7 +32,7 @@ if (!$actividad) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = $_POST['titulo'];
     $contenido = $_POST['contenido'];
-    $estado = $_POST['estado'];
+    $estado = $actividad['estado'];
 
     // Actualizar la actividad
     $stmt = $pdo->prepare("UPDATE actividad SET titulo = ?, contenido = ?, estado = ? WHERE id = ?");

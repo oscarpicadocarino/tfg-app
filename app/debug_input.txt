@@ -1,10 +1,10 @@
 Array
 (
-    [mensaje] => Generame una actividad para que los alumnos deban identificar los errores de un Codigo en Java
+    [mensaje] => Generame una actividad con errores de compilación en Java basados en el error seleccionado
     [id_clase] => 1
     [errores_seleccionados] => Array
         (
-            [0] => Distinción entre atributos de clase e instancias. Los estudiantes presentan dificultades comprendiendo que el valor de todos los atributos de clase es igual para todas las instancias de esa clase.
+            [0] => Dificultades en la comprensión de los modificadores de acceso: público, privado, paquete y protegido.
         )
 
 )

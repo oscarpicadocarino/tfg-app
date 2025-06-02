@@ -74,6 +74,7 @@ foreach ($errores_comunes as $error) {
             padding: 40px;
             display: flex;
             flex-direction: column;
+            max-width: 100vw;
         }
         .chat-box {
             flex-grow: 1;
@@ -82,6 +83,7 @@ foreach ($errores_comunes as $error) {
             border-radius: 10px;
             padding: 20px;
             overflow-y: auto;
+            overflow-x: hidden;
             margin-bottom: 20px;
             white-space: pre-wrap;
         }
@@ -101,6 +103,7 @@ foreach ($errores_comunes as $error) {
             max-width: 70%;
             white-space: pre-wrap;
             word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         .user .bubble {
             background-color: #d1e7dd;
@@ -134,65 +137,23 @@ foreach ($errores_comunes as $error) {
     </style>
 </head>
 <body>
-<div class="sidebar">
-    <h3 class="mb-5 text-center fw-bold pb-2 border-bottom border-dark">Menú</h3>
-    <ul class="nav flex-column">
-        <li class="nav-item">
-            <a href="inicio_profesor.php" class="nav-link"><i class="bi bi-house-door"></i> Inicio</a>
-        </li>
-        <li class="nav-item">
-            <a href="generar_actividad.php?id_clase=<?= htmlspecialchars($id_clase) ?>" class="nav-link"><i class="bi bi-plus-square"></i> Generar Actividad</a>
-        </li>
-        <li class="nav-item">
-            <a href="actividades.php?id_clase=<?= htmlspecialchars($id_clase) ?>" class="nav-link"><i class="bi bi-list-ul"></i> Gestionar Actividades</a>
-        </li>
-        <li class="nav-item">
-            <a href="errores_comunes.php?id_clase=<?= htmlspecialchars($id_clase) ?>&id_asignatura=<?= htmlspecialchars($id_asignatura) ?>" class="nav-link"><i class="bi bi-exclamation-circle"></i> Errores Comunes</a>
-        </li>
-        <li class="nav-item">
-            <a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a>
-        </li>
-    </ul>
-</div>
+    <div class="sidebar">
+        <h3 class="mb-5 text-center fw-bold pb-2 border-bottom border-dark">Menú</h3>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a href="inicio_alumno.php" class="nav-link"><i class="bi bi-house-door"></i> Inicio</a>
+            </li>
+            <li class="nav-item">
+                <a href="chatbot.php" class="nav-link"><i class="bi bi-chat-dots"></i> ChatBot</a>
+            </li>
+            <li class="nav-item">
+                <a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a>
+            </li>
+        </ul>
+    </div>
 
 <div class="content">
-    <h2 class="fw-semibold mb-4">Generador de Actividades por IA</h2>
-
-    <div class="errores-selector">
-        <form method="GET" class="mb-3">
-            <input type="hidden" name="id_clase" value="<?= htmlspecialchars($id_clase) ?>">
-            <label for="tema" class="form-label fw-semibold">Filtrar por tema:</label>
-            <select name="tema" id="tema" class="form-select mb-3" onchange="this.form.submit()">
-                <option value="todos" <?= $tema_filtro === 'todos' ? 'selected' : '' ?>>Todos</option>
-                <?php foreach (array_unique(array_column($errores_comunes, 'tema')) as $tema): ?>
-                    <option value="<?= htmlspecialchars($tema) ?>" <?= $tema_filtro === $tema ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($tema) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </form>
-
-        <label class="form-label">Errores comunes a tener en cuenta:</label>
-        <div class="border rounded p-3" style="background-color: #fff; max-height: 250px; overflow-y: auto;">
-            <?php if (!empty($errores_por_tema)): ?>
-                <?php foreach ($errores_por_tema as $tema => $errores): ?>
-                    <div>
-                        <strong><?= htmlspecialchars($tema) ?></strong>
-                        <?php foreach ($errores as $error): ?>
-                            <div class="form-check ms-3">
-                                <input class="form-check-input error-checkbox" type="checkbox" value="<?= htmlspecialchars($error['descripcion']) ?>" id="error-<?= $error['id_error'] ?>">
-                                <label class="form-check-label" for="error-<?= $error['id_error'] ?>">
-                                    <?= htmlspecialchars($error['descripcion']) ?>
-                                </label>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p class="text-muted">No hay errores comunes disponibles para este tema.</p>
-            <?php endif; ?>
-        </div>
-    </div>
+    <h2 class="fw-semibold mb-4">Chatbot para Ayudas</h2>
 
     <div class="chat-box" id="chat-box">
         <div class="chat-message assistant">
@@ -229,12 +190,12 @@ document.getElementById("chat-form").addEventListener("submit", async function (
 
     const userMessage = document.createElement("div");
     userMessage.className = "chat-message user";
-    userMessage.innerHTML = `<div class="bubble"><pre>${escapeHtml(mensaje)}</pre></div>`;
+    userMessage.innerHTML = `<div class="bubble">${escapeHtml(mensaje)}</div>`;
     chatBox.appendChild(userMessage);
 
     const assistantMessage = document.createElement("div");
     assistantMessage.className = "chat-message assistant";
-    assistantMessage.innerHTML = `<div class="bubble"><em>Generando actividad...</em></div>`;
+    assistantMessage.innerHTML = `<div class="bubble"><em>Generando la repuesta...</em></div>`;
     chatBox.appendChild(assistantMessage);
     chatBox.scrollTop = chatBox.scrollHeight;
     input.value = "";
@@ -242,7 +203,7 @@ document.getElementById("chat-form").addEventListener("submit", async function (
     try {
         const idClase = <?= json_encode($id_clase) ?>;
 
-        const res = await fetch("procesar_actividad.php", {
+        const res = await fetch("procesar_mensaje_alumno.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -255,18 +216,10 @@ document.getElementById("chat-form").addEventListener("submit", async function (
         if (!res.ok) throw new Error('Error en la respuesta');
         const data = await res.json();
 
-        assistantMessage.innerHTML = `<div class="bubble"><pre>${escapeHtml(data.respuesta)}</pre></div>`;
+        assistantMessage.innerHTML = `<div class="bubble">${escapeHtml(data.respuesta)}</div>`;
 
-        const contenedor = document.getElementById("guardar-actividad-container");
-        contenedor.innerHTML = `
-            <form method="POST" action="guardar_actividad.php">
-                <input type="hidden" name="id_clase" value="${idClase}">
-                <input type="hidden" name="contenido" value="${escapeHtml(data.respuesta).replace(/"/g, '&quot;')}">
-                <button type="submit" class="btn btn-success mt-2"><i class="bi bi-save"></i> Guardar actividad</button>
-            </form>
-        `;
     } catch (err) {
-        assistantMessage.innerHTML = `<div class="bubble">Error al generar la actividad.</div>`;
+        assistantMessage.innerHTML = `<div class="bubble">Error al generar la respuesta.</div>`;
     }
 
     chatBox.scrollTop = chatBox.scrollHeight;

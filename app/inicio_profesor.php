@@ -127,6 +127,7 @@ try {
                 <?php if (isset($asignaturas_clases) && count($asignaturas_clases) > 0): ?>
                     <?php foreach ($asignaturas_clases as $asignatura_clase): ?>
                         <div class="col-md-6 d-flex">
+                            
                             <a href="clase_profesor.php?id_clase=<?= $asignatura_clase['id_clase'] ?>&id_asignatura=<?= $asignatura_clase['id_asignatura'] ?>" class="text-decoration-none text-dark w-100">
                                 <div class="card p-4 shadow-sm border-0 w-100">
                                     <div class="d-flex align-items-center">

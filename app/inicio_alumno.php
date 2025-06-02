@@ -17,7 +17,8 @@ try {
 
     // Ahora también obtenemos el nombre de la clase
     $stmt = $pdo->prepare("
-        SELECT 
+        SELECT
+            a.id_asignatura,
             c.id_clase, 
             a.nombre AS nombre_asignatura, 
             a.descripcion AS descripcion_asignatura, 
@@ -29,6 +30,7 @@ try {
     ");
     $stmt->execute([$id_alumno]);
     $clases = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    //$asignatura_clase = $smt->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
     echo "Error de conexión: " . $e->getMessage();
@@ -125,7 +127,7 @@ try {
                 <?php if (isset($clases) && count($clases) > 0): ?>
                     <?php foreach ($clases as $clase): ?>
                         <div class="col-md-6 d-flex">
-                            <a href="asignatura_alumno.php?id_clase=<?= $clase['id_clase'] ?>" class="text-decoration-none text-dark w-100">
+                            <a href="clase_alumno.php?id_clase=<?= $clase['id_clase']?>&id_asignatura=<?= $clase['id_asignatura'] ?>" class="text-decoration-none text-dark w-100">
                                 <div class="card p-4 shadow-sm border-0 w-100">
                                     <div class="d-flex align-items-center">
                                         <i class="bi bi-journal-code me-3" style="font-size: 2.5rem; color: #0d6efd;"></i>

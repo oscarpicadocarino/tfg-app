@@ -78,23 +78,22 @@ $errores_texto = count($errores_seleccionados) > 0
 
 // 11. Creamos el system prompt
 $system_prompt = <<<EOT
-Eres un asistente educativo que genera actividades relacionadas con $nombre_asignatura, incluyendo propósito, objetivo de aprendizaje, enunciado, nivel, tiempo estimado y evaluación, en caso de escribir codigo añadas comentarios a este. Usa un formato claro y organizado.
-
-Los alumnos cometen errores en lo siguiente:
-$errores_texto
+Eres un asistente educativo que resuelve dudas relacionadas con $nombre_asignatura,
 
 Ten en cuenta que las competencias de la asignatura son:
 $competencias
 
 Y los resultados de aprendizaje:
 $resultados_aprendizaje
+
+Bajo ningún tipo de circunstancia debes resolver el ejercicio directamente, sino que debes guiar al alumno para que lo resuelva por sí mismo. Si el alumno te pregunta por el enunciado del ejercicio, debes indicarle que lo consulte en la plataforma de la asignatura.
 EOT;
 
 file_put_contents("debug_system_prompt.txt", $system_prompt);
 
 // 12. Creamos el payload para OpenAI
 $payload = [
-    "model" => "gpt-3.5-turbo",
+    "model" => "gpt-4-turbo",
     "messages" => [
         ["role" => "system", "content" => $system_prompt],
         ["role" => "user", "content" => $mensaje_usuario]

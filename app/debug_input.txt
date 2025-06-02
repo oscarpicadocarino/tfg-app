@@ -1,10 +1,45 @@
 Array
 (
-    [mensaje] => Generame una actividad con errores de compilación en Java basados en el error seleccionado
+    [mensaje] => ¿Me puedes solucionar esta actividad?
+
+**Enunciado:**
+Los estudiantes recibirán un código en Java con varios errores de compilación relacionados con los modificadores de acceso. Deberán identificar estos errores y corregirlos para que el código compile y funcione correctamente.
+
+**Nivel:** Intermedio
+
+**Tiempo Estimado:** 1 hora
+
+**Código con Errores:**
+
+```java
+class Base {
+private int datoPrivado = 10;
+int datoPaquete = 20;
+protected int datoProtegido = 30;
+public int datoPublico = 40;
+}
+
+public class AccesoDatos {
+public static void main(String[] args) {
+Base base = new Base();
+
+System.out.println("Dato Privado: " + base.datoPrivado);
+System.out.println("Dato Paquete: " + base.datoPaquete);
+System.out.println("Dato Protegido: " + base.datoProtegido);
+System.out.println("Dato Público: " + base.datoPublico);
+}
+}
+```
+
+**Instrucciones:**
+1. Analiza el código proporcionado.
+2. Identifica los errores relacionados con los modificadores de acceso.
+3. Modifica el código para corregir los errores sin cambiar los niveles de acceso de las variables en la clase `Base`.
+4. Asegúrate de que el código corregido compile y ejecute correctamente.
+5. Explica por qué se produjeron los errores y cómo los corregiste.
     [id_clase] => 1
     [errores_seleccionados] => Array
         (
-            [0] => Dificultades en la comprensión de los modificadores de acceso: público, privado, paquete y protegido.
         )
 
 )

@@ -11,14 +11,14 @@ if (!file_exists('conexion.php')) {
 }
 require 'conexion.php';
 
-// 3. API key (⚠️ NO subas esto a repositorios públicos)
+// 2. API key (⚠️ NO subas esto a repositorios públicos)
 $apiKey = "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";
 
-// 5. Leemos input recibido (JSON)
+// 3. Leemos input recibido (JSON)
 $input = json_decode(file_get_contents("php://input"), true);
 
 
-// 6. Obtenemos parámetros
+// 4. Obtenemos parámetros
 $mensaje_usuario = trim($input["mensaje"] ?? "");
 $id_clase = $input["id_clase"] ?? null;
 $errores_seleccionados = $input["errores_seleccionados"] ?? [];
@@ -30,7 +30,7 @@ if (!$mensaje_usuario || !$id_clase) {
     exit;
 }
 
-// 7. Obtenemos la asignatura a partir de la clase
+// 5. Obtenemos la asignatura a partir de la clase
 $stmtClase = $pdo->prepare("SELECT id_asignatura FROM clases WHERE id_clase = ?");
 $stmtClase->execute([$id_clase]);
 $clase = $stmtClase->fetch(PDO::FETCH_ASSOC);
@@ -44,13 +44,13 @@ if (!$id_asignatura) {
 }
 
 
-// 8. Obtenemos nombre de la asignatura
+// 6. Obtenemos nombre de la asignatura
 $stmtAsignatura = $pdo->prepare("SELECT nombre FROM asignaturas WHERE id_asignatura = ?");
 $stmtAsignatura->execute([$id_asignatura]);
 $asignatura = $stmtAsignatura->fetch(PDO::FETCH_ASSOC);
 $nombre_asignatura = $asignatura['nombre'] ?? 'la asignatura';
 
-// 9. Obtenemos competencias y resultados de aprendizaje
+// 7. Obtenemos competencias y resultados de aprendizaje
 $stmtGuias = $pdo->prepare("SELECT competencias, resultados_aprendizaje FROM guias_docentes WHERE asignatura_id = ?");
 $stmtGuias->execute([$id_asignatura]);
 $guia = $stmtGuias->fetch(PDO::FETCH_ASSOC);
@@ -58,12 +58,12 @@ $guia = $stmtGuias->fetch(PDO::FETCH_ASSOC);
 $competencias = $guia['competencias'] ?? 'No hay competencias definidas.';
 $resultados_aprendizaje = $guia['resultados_aprendizaje'] ?? 'No hay resultados de aprendizaje definidos.';
 
-// 10. Convertimos errores seleccionados a texto
+// 8. Convertimos errores seleccionados a texto
 $errores_texto = count($errores_seleccionados) > 0
     ? "- " . implode("\n- ", $errores_seleccionados)
     : "No se seleccionaron errores comunes.";
 
-// 11. Creamos el system prompt
+// 9. Creamos el system prompt
 $system_prompt = <<<EOT
 Eres un asistente educativo que genera actividades relacionadas con $nombre_asignatura, incluyendo propósito, objetivo de aprendizaje, enunciado, nivel, tiempo estimado y evaluación, en caso de escribir codigo añadas comentarios a este. Usa un formato claro y organizado.
 
@@ -77,7 +77,7 @@ Y los resultados de aprendizaje:
 $resultados_aprendizaje
 EOT;
 
-// 12. Creamos el payload para OpenAI
+// 10. Creamos el payload para OpenAI
 $payload = [
     "model" => "gpt-3.5-turbo",
     "messages" => [
@@ -87,7 +87,7 @@ $payload = [
     "temperature" => 0.7
 ];
 
-// 13. Preparamos la petición cURL
+// 11. Preparamos la petición cURL
 $ch = curl_init("https://api.openai.com/v1/chat/completions");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -97,7 +97,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 
-// 14. Ejecutamos y verificamos
+// 12. Ejecutamos y verificamos
 $response = curl_exec($ch);
 $error_msg = curl_error($ch);
 $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -109,7 +109,7 @@ if ($error_msg || !$response) {
     exit;
 }
 
-// 15. Procesamos la respuesta
+// 13. Procesamos la respuesta
 $data = json_decode($response, true);
 
 if (!isset($data["choices"][0]["message"]["content"])) {
@@ -118,7 +118,7 @@ if (!isset($data["choices"][0]["message"]["content"])) {
     exit;
 }
 
-// 16. Respondemos al cliente
+// 14. Respondemos al cliente
 header('Content-Type: application/json');
 echo json_encode([
     "respuesta" => $data["choices"][0]["message"]["content"]

@@ -1,4 +1,0 @@
-Array
-(
-    [id_asignatura] => 1
-)

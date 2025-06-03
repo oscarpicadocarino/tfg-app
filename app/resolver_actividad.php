@@ -6,6 +6,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] !== 'alumno') {
 }
 
 require 'conexion.php';
+require_once 'Parsedown.php';
+$Parsedown = new Parsedown();
 
 $id_actividad = $_GET['id'] ?? null;
 $id_alumno = $_SESSION['user_id'];
@@ -20,7 +22,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Procesar el envío del código
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['codigo'])) {
         $codigo = $_POST['codigo'] ?? '';
 
         if (!empty($codigo)) {
@@ -47,7 +49,6 @@ try {
     exit();
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -96,6 +97,14 @@ try {
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+        #respuesta-chatbot {
+            white-space: pre-wrap;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -119,45 +128,93 @@ try {
     <h2 class="mb-4 fw-semibold"><?= htmlspecialchars($actividad['titulo']) ?></h2>
 
     <div class="mb-4">
-        <p><?= nl2br(htmlspecialchars($actividad['contenido'])) ?></p>
+        <?= $Parsedown->text($actividad['contenido']) ?>
     </div>
 
     <form method="POST" onsubmit="return enviarCodigo()">
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Lenguaje de programación:</label>
+            <select id="language-selector" class="form-select" onchange="cambiarLenguaje()">
+                <option value="cpp">C++</option>
+                <option value="python">Python</option>
+                <option value="javascript">JavaScript</option>
+                <option value="java">Java</option>
+                <option value="ruby">Ruby</option>
+            </select>
+        </div>
+
         <div class="mb-4">
             <label class="form-label fw-semibold">Tu solución:</label>
             <div id="editor"></div>
             <input type="hidden" name="codigo" id="codigo">
         </div>
         <input type="hidden" name="id_actividad" value="<?= $id_actividad ?>">
-        <button type="submit" class="btn btn-primary">Enviar</button>
+        <button type="submit" class="btn btn-primary me-2">Enviar</button>
+        <button type="button" class="btn btn-outline-secondary" onclick="consultarChatbot()">Solicitar ayuda al ChatBot</button>
     </form>
 
-    <!-- Mensajes de éxito o error aquí, dentro del contenido -->
     <?php if (isset($mensaje_exito)): ?>
         <div class="alert alert-success mt-3"><?= htmlspecialchars($mensaje_exito) ?></div>
     <?php elseif (isset($mensaje_error)): ?>
         <div class="alert alert-danger mt-3"><?= htmlspecialchars($mensaje_error) ?></div>
     <?php endif; ?>
+
+    <div id="respuesta-chatbot" class="mt-4 d-none"></div>
 </div>
 
-
 <script>
+let editor;
+
 require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs' }});
 require(['vs/editor/editor.main'], function () {
-    window.editor = monaco.editor.create(document.getElementById('editor'), {
-        value: "// Escribe tu código aquí...",
-        language: "cpp", // Puedes ajustar el lenguaje según el tipo de actividad
+    editor = monaco.editor.create(document.getElementById('editor'), {
+        value: "// Escribe aquí tu solución...",
+        language: "cpp",
         theme: "vs-dark",
         automaticLayout: true
     });
 });
+
+function cambiarLenguaje() {
+    const lenguaje = document.getElementById('language-selector').value;
+    monaco.editor.setModelLanguage(editor.getModel(), lenguaje);
+}
 
 function enviarCodigo() {
     document.getElementById('codigo').value = editor.getValue();
     return true;
 }
 
+function consultarChatbot() {
+    const codigo = editor.getValue();
+    const idActividad = <?= json_encode($id_actividad) ?>;
 
+    if (!codigo.trim()) {
+        alert("Primero escribe algo en el editor.");
+        return;
+    }
+
+    const respuestaDiv = document.getElementById("respuesta-chatbot");
+    respuestaDiv.classList.remove("d-none");
+    respuestaDiv.innerText = "Consultando al chatbot...";
+
+    fetch('ayuda_chatbot.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            codigo: codigo,
+            id_actividad: idActividad
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        respuestaDiv.innerText = data.respuesta || "No se pudo obtener una respuesta del chatbot.";
+    })
+    .catch(error => {
+        console.error('Error al consultar el chatbot:', error);
+        respuestaDiv.innerText = "Error al comunicarse con el chatbot.";
+    });
+}
 </script>
 
 </body>

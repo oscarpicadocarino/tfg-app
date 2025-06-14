@@ -72,7 +72,7 @@ $codigo
 EOT;
 
 // Preparar la solicitud a la API de OpenAI
-$apiKey = "MI_API_KEY_AQUÍ";
+$apiKey = "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";
 $payload = [
     'model' => 'gpt-4o',
     'messages' => [

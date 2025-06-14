@@ -67,3 +67,7 @@ Incluye:
 - Despliegue rápido y reproducible mediante Docker.
 
 ---
+
+## Archivos
+
+- **Memoria:** Este archivo contiene la memoria del proyecto. La memoria es un documento detallado en el que se recoge todo el desarrollo y resultados del proyecto. Todo el contenido se puede visualizar en [Memoria](./MemoriaTFG.pdf).

@@ -11,8 +11,8 @@ if (!file_exists('conexion.php')) {
 }
 require 'conexion.php';
 
-// 2. API key (⚠️ NO subas esto a repositorios públicos)
-$apiKey = "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";
+// 2. API key
+$apiKey = "MI_API_KEY_AQUÍ";
 
 // 3. Leemos input recibido (JSON)
 $input = json_decode(file_get_contents("php://input"), true);
